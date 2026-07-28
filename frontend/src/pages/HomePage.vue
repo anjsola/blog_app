@@ -30,9 +30,23 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue"
+import API from "../services/api.js"
 import Navbar from "../components/Navbar.vue"
 import HeroSection from "../components/HeroSection.vue"
 import ArticleCard from "../components/ArticleCard.vue"
+
+const articles = ref([])
+
+onMounted(async () => {
+  try {
+    const response = await API.get("/articles")
+    articles.value = response.data
+  } catch (error) {
+    console.error("Error fetching articles:", error)
+  }
+})
+
 </script>
 
 <style scoped>
