@@ -7,6 +7,9 @@
       <router-link to="/articles">Articles</router-link>
       <router-link to="/login">Login</router-link>
       <router-link to="/signup">Sign Up</router-link>
+      <router-link to="/create-post">
+        <button class="signup">Create Post</button>
+      </router-link>
     </div>
   </nav>
 </template>

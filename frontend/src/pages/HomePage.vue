@@ -9,22 +9,16 @@
         <span>All categories ></span>
       </div>
 
-      <div class="grid">
-        <ArticleCard
-          title="Building Agentic apps with AWS"
-          image="https://images.unsplash.com/photo-1677442135136-760c813028c0"
-        />
+    <div v-if="loading">Loading articles...</div> 
 
-        <ArticleCard
-          title="Not Giving up"
-          image="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
-        />
-
-        <ArticleCard
-          title="Welcome To Jola’s Blog"
-          image="https://images.unsplash.com/photo-1492724441997-5dc865305da7"
-        />
-      </div>
+    <div v-else class="grid">
+      <ArticleCard
+        v-for="article in articles"
+        :key="article.id"
+        :title="article.title"
+        :image="article.image || 'https://via.placeholder.com/150'"
+      />
+    </div>
     </section>
   </div>
 </template>
@@ -37,13 +31,17 @@ import HeroSection from "../components/HeroSection.vue"
 import ArticleCard from "../components/ArticleCard.vue"
 
 const articles = ref([])
+const loading = ref(true)
 
 onMounted(async () => {
   try {
-    const response = await API.get("/articles")
+    const response = await API.get("/posts")
     articles.value = response.data
   } catch (error) {
     console.error("Error fetching articles:", error)
+  } finally {
+    loading.value = false
+    console.log("Articles fetched:", articles.value)
   }
 })
 

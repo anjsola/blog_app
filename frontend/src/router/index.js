@@ -5,11 +5,13 @@ import Articles from '../pages/Articles.vue'
 import ArticlePage from '../pages/HomePage.vue'
 import Login from '../pages/Login.vue'
 import Signup from '../pages/Signup.vue'
+import CreatePost from '../pages/CreatePost.vue'
 
 const routes = [
   { path: '/', component: HomePage },
   { path: '/articles', component: Articles },
   { path: '/post/:id', component: ArticlePage },
+  { path: '/create-post', component: CreatePost },
   { path: '/login', component: Login },
   { path: '/signup', component: Signup },
 ]
