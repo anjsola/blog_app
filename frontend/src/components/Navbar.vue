@@ -14,6 +14,12 @@
   </nav>
 </template>
 
+<!-- //show logged in user name if token is present in local storage -->
+ <script setup>
+import { ref, onMounted } from 'vue';
+const token = localStorage.getItem('token');  
+</script>
+
 <style scoped>
 .navbar {
   display: flex;

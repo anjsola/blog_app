@@ -13,7 +13,7 @@ export async function protect(req, res, next) {
             console.error("Auth Middleware: Invalid token format", error);
             return res.status(401).json({ message: "Not authorized, token failed" });
         }
-    } else if (req.cookies && req.cookies?.jwt) {
+      } else if (req.cookies && req.cookies?.jwt) {
         token = req.cookies.jwt;
     }
 

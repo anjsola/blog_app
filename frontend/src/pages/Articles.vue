@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar />
+    <Navbar /> 
 
     <section class="container">
       <h1>All Articles</h1>
@@ -18,8 +18,11 @@
 </template>
 
 <script setup>
+import { ref,onMounted } from 'vue'
 import Navbar from '../components/Navbar.vue'
 import ArticleCard from '../components/ArticleCard.vue'
+import api from '../api/index.js'
+
 </script>
 
 <style scoped>

@@ -59,6 +59,7 @@ h1 {
   line-height: 1.7;
   opacity: 0.9;
   margin-bottom: 30px;
+  font-size: 20px;
 }
 
 .buttons {

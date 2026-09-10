@@ -1,41 +1,62 @@
 const { prisma } = require("../lib/prisma");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/generateToken");
+const { registerSchema, loginSchema } = require("../validators/authValidator");
 
 async function registerUser (req, res){
-    const { username, email, password } = req.body;
+    try {
+        const validation = registerSchema.safeParse(req.body);
 
-    //check if user already exists
-    const existingUser = await prisma.user.findUnique({
-        where: {
-            email: email
-        },
-    });
+        const { username, email, password } = validation.data; // Extract validated data
 
-    if (existingUser) {
-        return res.status(400).json({ error: "User already exists" });
-    }
-    //hash the password before saving it to the database
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    //create a new user
-    const user = await prisma.user.create({
-        data: {
-            username,
-            email,
-            password: hashedPassword,
+        if (!validation.success) {
+            return res.status(400).json({ error: validation.error.errors });
         }
-    });
-    //generate JWT token for authentication
-    const token = generateToken(user, res);
 
-    res.status(201).json({ message: "User registered successfully", user: { username, email, password: hashedPassword }, token });
+        //check if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                email: email
+            },
+        });
+
+        if (existingUser) {
+            return res.status(400).json({ error: "User already exists" });
+        }
+        //hash the password before saving it to the database
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        //create a new user
+        const user = await prisma.user.create({
+            data: {
+                username,
+                email,
+                password: hashedPassword,
+            }
+        });
+        //generate JWT token for authentication
+        const token = generateToken(user, res);
+
+        res.status(201).json({ message: "User registered successfully", user: { username, email, password: hashedPassword }, token });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
 // login user
 async function loginUser(req, res) {
-    const { email, password } = req.body;
+    try {
+        const validation = loginSchema.safeParse(req.body);
+        if (!validation.success) {
+            return res.status(400).json({ error: validation.error.errors });
+        }
 
+        const { email, password } = validation.data;
+
+    // if (!password) {
+    //     return res.status(400).json({ error: "Please provide both email and password" });
+    // }
+        
     //check if user exists
     const user = await prisma.user.findUnique({
         where: {
@@ -57,7 +78,10 @@ async function loginUser(req, res) {
     // In a real application, you would compare the password with the hashed password
     res.status(200).json({ 
         message: "User logged in successfully", user: { id: user.id, email: user.email }, token });
-}
+    } catch (error) {
+        return res.status(500).json({error: error.message})
+    }
+} 
 
 // const logoutUser = (req, res) => {
 //     res.clearCookie("jwt");
@@ -114,4 +138,3 @@ module.exports = {
     logoutUser
     // getUser
 };
-    

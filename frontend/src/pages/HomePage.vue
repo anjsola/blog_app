@@ -31,16 +31,15 @@ import HeroSection from "../components/HeroSection.vue"
 import ArticleCard from "../components/ArticleCard.vue"
 
 const articles = ref([])
-const loading = ref(true)
 
 onMounted(async () => {
   try {
-    const response = await API.get("/posts")
+    const response = await API.get("/articles")
     articles.value = response.data
   } catch (error) {
     console.error("Error fetching articles:", error)
-  } finally {
-    loading.value = false
+  }finally {
+    loading.value = false // Set loading to false after the request is completed
     console.log("Articles fetched:", articles.value)
   }
 })

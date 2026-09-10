@@ -1,9 +1,14 @@
 // import { prisma } from "../lib/prisma.js"; // ES6 module syntax
 const { prisma } = require("../lib/prisma");
+const { postSchema } = require("../validators/postValidator");
 
 //create a new post -authors only
 async function createPost(req, res) {
   const { title, content, published } = req.body;
+  const validation = postSchema.safeParse({ title, content, published });
+  if (!validation.success) {
+    return res.status(400).json({ error: validation.error.errors });
+  }
   if (!title || !content) {
     return res.status(400).json({ error: "Title and content are required" });
   } 
