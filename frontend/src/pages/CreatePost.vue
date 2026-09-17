@@ -5,10 +5,15 @@
         <div class="form">
             <h2>Create a New Post</h2>
 
-            <input v-model="title" type="text" placeholder="Title" />
-            <textarea v-model="content" placeholder="Content"></textarea>
+            <form @submit.prevent="createPost">
 
-            <button @click="createPost">Create Post</button>
+                <input v-model="title" type="text" placeholder="Title" />
+                <textarea v-model="content" placeholder="Write your post..."></textarea>
+
+                <button @click="createPost">Create Post</button>
+            </form>
+            <p v-if="error" class="error">{{ error }}</p>
+            <p v-if="success" class="success">{{ success }}</p>
         </div>
     </div>
 </template>
@@ -22,19 +27,36 @@ import Navbar from "../components/Navbar.vue"
 const title = ref("")
 const content = ref("")
 const router = useRouter()
+const error = ref("")
+const success = ref("")
+
 
 const createPost = async () => {
     try {
+        success.value = ""
+        error.value = ""
+
+        const token = localStorage.getItem("token")
         const response = await API.post("/posts", {
             title: title.value,
             content: content.value,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
-        alert("Post created successfully!")
+        success.value = "Post created successfully!"
+        title.value = ""  // Clear the input fields after successful post creation
+        content.value = ""// Clear the input fields after successful post creation
+        
         console.log("Post created:", response.data)
         router.push("/") // Redirect to home page after successful post creation
     } catch (error) {
         console.error("Error creating post:", error)
-        alert("Failed to create post. Please try again.")
+        error.value = 
+            error.response && error.response.data && error.response.data.message
+            ? error.response.data.message    
+        : "An error occurred while creating the post."
     }
 }
 </script>  

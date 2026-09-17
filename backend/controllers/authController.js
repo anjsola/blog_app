@@ -57,27 +57,31 @@ async function loginUser(req, res) {
     //     return res.status(400).json({ error: "Please provide both email and password" });
     // }
         
-    //check if user exists
-    const user = await prisma.user.findUnique({
-        where: {
-            email: email
-        },
-    });
-    if (!user) {
-        return res.status(401).json({ error: "Invalid email or password" });
-    }
-    //compare the password with the hashed password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-        return res.status(401).json({ error: "Invalid email or password" });
-    }
+        console.log("LOGIN EMAIL:", email);
 
-//generate JWT token for authentication
-    const token = generateToken(user, res);
-    
-    // In a real application, you would compare the password with the hashed password
-    res.status(200).json({ 
-        message: "User logged in successfully", user: { id: user.id, email: user.email }, token });
+        //check if user exists
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email
+            },
+        });
+        console.log("LOGIN USER:", user);
+        if (!user) {
+            return res.status(401).json({ error: "Invalid email or password" });
+        }
+        //compare the password with the hashed password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        console.log("PASSWORD VALID:", isPasswordValid);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Invalid email or password" });
+        }
+
+    //generate JWT token for authentication
+        const token = generateToken(user, res);
+        
+        // In a real application, you would compare the password with the hashed password
+        res.status(200).json({ 
+            message: "User logged in successfully", user: { id: user.id, email: user.email }, token });
     } catch (error) {
         return res.status(500).json({error: error.message})
     }

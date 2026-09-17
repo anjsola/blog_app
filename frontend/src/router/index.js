@@ -16,9 +16,21 @@ const routes = [
   { path: '/signup', component: Signup },
 ]
 
+
+
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
 
 export default router
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('token') !== null
+
+  if (to.path === '/create-post' && !isAuthenticated) {
+    next('/login')
+  } else {
+    next()
+  }
+})

@@ -31,6 +31,7 @@ import HeroSection from "../components/HeroSection.vue"
 import ArticleCard from "../components/ArticleCard.vue"
 
 const articles = ref([])
+const loading = ref(true) // Add a loading state
 
 onMounted(async () => {
   try {

@@ -40,6 +40,13 @@ const login = async () => {
     alert('Login failed. Please check your credentials and try again.')
   }
 }
+
+//logout function
+const logout = () => {
+  localStorage.removeItem('token')
+  alert('Logged out successfully!')
+  router.push('/login') // Redirect to login page after logout
+}
 </script>
 
 <style scoped>

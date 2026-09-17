@@ -8,16 +8,39 @@
       <router-link to="/login">Login</router-link>
       <router-link to="/signup">Sign Up</router-link>
       <router-link to="/create-post">
-        <button class="signup">Create Post</button>
+        <button class="create-post">Create Post</button>
       </router-link>
+      <button v-if="isLoggedIn" @click="logout">Logout</button>
+      
     </div>
   </nav>
 </template>
 
 <!-- //show logged in user name if token is present in local storage -->
  <script setup>
-import { ref, onMounted } from 'vue';
-const token = localStorage.getItem('token');  
+import { ref, onMounted, watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const token = localStorage.getItem('token');
+const isLoggedIn = ref(false);
+
+onMounted(() => {
+  if (token) {
+    isLoggedIn.value = true;
+  }
+});
+
+function logout() {
+  localStorage.removeItem('token');
+  isLoggedIn.value = false;
+  router.push('/login');
+}
+
+watchEffect(() => {
+  const token = localStorage.getItem('token');
+  isLoggedIn.value = !!token;
+});
 </script>
 
 <style scoped>
@@ -51,7 +74,7 @@ const token = localStorage.getItem('token');
   opacity: 1;
 }
 
-.signup {
+.create-post {
   background: #e9e5de;
   border: none;
   padding: 8px 16px;
