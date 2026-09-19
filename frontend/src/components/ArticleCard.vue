@@ -3,6 +3,7 @@
     <img :src="image" />
     <div class="content">
       <h3>{{ title }}</h3>
+      <p>{{ content }}</p>
     </div>
   </div>
 </template>
@@ -10,7 +11,8 @@
 <script setup>
 defineProps({
   title: String,
-  image: String
+  image: String,
+  content: String
 })
 </script>
 

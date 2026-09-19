@@ -35,7 +35,7 @@ const loading = ref(true) // Add a loading state
 
 onMounted(async () => {
   try {
-    const response = await API.get("/articles")
+    const response = await API.get("/posts")
     articles.value = response.data
   } catch (error) {
     console.error("Error fetching articles:", error)
@@ -62,7 +62,7 @@ onMounted(async () => {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 25px;
 }
 </style>

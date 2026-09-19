@@ -37,7 +37,7 @@ async function getAllPosts(req, res) {
         published: true // only retrieve published posts
       },
       include: {
-        author: true // include the author information
+        author: { select: { id: true, username: true } } // include the author information
       },
       orderBy: {
         createdAt: 'desc' // order by creation date, newest first
